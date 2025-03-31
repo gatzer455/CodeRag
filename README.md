@@ -110,10 +110,10 @@ El archivo de salida (output.json por defecto) contiene un array JSON. Cada elem
 Este formato está diseñado para ser fácilmente parseado y utilizado para generar embeddings o alimentar directamente a un LLM dentro de un pipeline RAG.
 
 🗺️ Roadmap (Próximos Pasos)
- Chunking Inteligente: Usar tree-sitter para dividir archivos de código por funciones, clases o bloques lógicos.
- Configuración de Exclusiones: Permitir ignorar archivos/directorios específicos mediante un archivo de configuración o flags.
- Tests: Añadir tests unitarios y de integración.
- Comando search: Implementar funcionalidad para buscar en el índice generado (potencialmente usando embeddings).
- Publicación en Crates.io: Hacer que la instalación sea más sencilla con cargo install coderag.
+- Chunking Inteligente: Usar tree-sitter para dividir archivos de código por funciones, clases o bloques lógicos.
+- Configuración de Exclusiones: Permitir ignorar archivos/directorios específicos mediante un archivo de configuración o flags.
+- Tests: Añadir tests unitarios y de integración.
+- Comando search: Implementar funcionalidad para buscar en el índice generado (potencialmente usando embeddings).
+- Publicación en Crates.io: Hacer que la instalación sea más sencilla con cargo install coderag.
 🤝 Contribuciones
 ¡Las contribuciones son bienvenidas! Si tienes ideas, encuentras bugs o quieres añadir nuevas funcionalidades, por favor abre un Issue o envía un Pull Request.
