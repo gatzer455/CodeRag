@@ -22,7 +22,7 @@ Los Large Language Models (LLMs) a menudo tienen dificultades para comprender el
 
 *   **Interfaz CLI Simple:** Un comando `index` fácil de usar para iniciar el proceso.
 *   **Escaneo Rápido de Directorios:** Utiliza `ignore` para respetar las reglas de `.gitignore` (si existe) y recorrer eficientemente el proyecto.
-*   **Detección de Lenguajes/Archivos:** Identifica archivos comunes de código (`.rs`, `.py`, `.js`, etc.), configuración (`.json`, `.toml`, `.yaml`) y documentación (`.md`, `LICENSE`).
+*   **Detección de Lenguajes/Archivos:** Identifica archivos comunes de código (`.rs`, `.py`, `.js`, etc.), configuración (`.json`, `.toml`, `.yaml`) y documentación (`.md`).
 *   **Extracción de Contenido:** Lee el contenido de los archivos detectados.
 *   **Barra de Progreso Visual:** Muestra el progreso del escaneo y procesamiento con `indicatif`.
 *   **Chunking Básico de Markdown:** Divide archivos `.md` en fragmentos basados en encabezados (`#`, `##`, etc.) para mantener la coherencia temática.
@@ -99,11 +99,6 @@ El archivo de salida (output.json por defecto) contiene un array JSON. Cada elem
     "language": "Markdown",
     "content": "CodeRag\n Tu codebase, indexada..." // (Puede ser un fragmento si el archivo es grande)
   },
-  {
-    "file_path": "LICENSE",
-    "language": "License",
-    "content": "MIT License\n\nCopyright (c) [year] [fullname]\n..."
-  }
   // ... más chunks
 ]
 ```

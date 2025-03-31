@@ -47,21 +47,10 @@ fn is_code_file(path: &Path) -> bool {
         Some ("rs") | Some("py") | Some("js") | Some("ts") | Some("go") |
         // Archivos de documentación/configuración
         Some("md") | Some("json") | Some("toml") | Some("yaml") | Some("yml") => true,
-        // Licencias(con .txt)
-        Some("txt") if is_license_file(path) => true,
-
-        None if path.file_name().and_then(|n| n.to_str()) == Some("LICENSE") ||
-        path.file_name().and_then(|n| n.to_str()) == Some("LICENSE-MIT") => true,
-
         _ => false,
     }
 }
 
-/// Detecta archivos de licencia comúnmente nombrados
-fn is_license_file(path: &Path) -> bool {
-    let name = path.file_stem().and_then(|n| n.to_str()).unwrap_or("");
-    name.eq_ignore_ascii_case("license") || name.eq_ignore_ascii_case("copying")
-}
 
 
 
@@ -103,13 +92,7 @@ pub fn extract_code_chunks(files: Vec<PathBuf>) -> Result<Vec<CodeChunk>> {
             Some("json") => "JSON",
             Some("toml") => "TOML",
             Some("yaml") | Some("yml") => "YAML",
-            _ => {
-                if is_license_file(&file) {
-                    "License"
-                } else {
-                    "Unknown"
-                }
-            }
+            _ => "Unknown"
         }.to_string();
 
         chunks.push(CodeChunk {
