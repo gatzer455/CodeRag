@@ -1,12 +1,12 @@
-// src/processor.rs
-
 use anyhow::{Context, Result};
-use ignore::Walk;
+use ignore::WalkBuilder;
+use ignore::overrides::OverrideBuilder;
 use std::path::{Path, PathBuf};
 use std::fs;
 use serde::Serialize;
 use indicatif::ProgressBar;
 use pulldown_cmark::{Parser as MdParser, Event, Tag};
+
 
 
 #[derive(Serialize)] // Añade esta línea
@@ -19,19 +19,34 @@ pub struct CodeChunk {
 
 /// Detecta archvos de código en un directorio y devuelve sus rutas.
 
-pub fn find_code_files(dir: &str) -> Result<Vec<PathBuf>> {
+pub fn find_code_files(dir: &str, exclude_patterns: &[String]) -> Result<Vec<PathBuf>> {
+    let project_root = Path::new(dir);
+    let file_patterns = load_ignore_patterns(project_root)?;
 
-    println!("Scanning directory: {}", dir); //Mensaje de depuración
+
+    let mut overrides = OverrideBuilder::new(project_root);
+    // Procesar patrones de exclusión de CLI
+    for pattern in file_patterns.iter().chain(exclude_patterns.iter()) {
+    overrides.add(&format!("!{}", pattern))?;
+    }
+
+    let overrides = overrides.build()?; 
+
+    let walker = WalkBuilder::new(dir)
+        .overrides(overrides)
+        .add_custom_ignore_filename(".coderagignore") // Nuevo archivo de ignore
+        .git_ignore(true)
+        .build();
     let mut code_files = Vec::new();
 
-    for entry in Walk::new(dir) {
-        let entry = entry.context("Failed to read directory entry")?;
+    for entry in walker {
+        let entry = entry.context(format!("Failed to read entry in directory {}", dir))?;
         let path = entry.path();
-
-        if path.is_file() && is_code_file(path) {
-            code_files.push(path.to_path_buf());
+        if entry.file_type().map(|ft| ft.is_file()).unwrap_or(false) && is_code_file(path) {
+            code_files.push(entry.into_path());
         }
     }
+
 
     Ok(code_files)
 }
@@ -130,4 +145,18 @@ fn process_markdown(content: &str) -> Vec<String> {
     }
 
     chunks
+}
+
+pub fn load_ignore_patterns(project_root: &Path) -> Result<Vec<String>> {
+    let ignore_file = project_root.join(".coderagignore");
+
+    if ignore_file.exists() {
+        let content = std::fs::read_to_string(ignore_file)?;
+        Ok(content.lines()
+            .filter(|l| !l.trim_start().starts_with('#') && !l.trim().is_empty())
+            .map(String::from)
+            .collect())
+    } else {
+        Ok(Vec::new())
+    }
 }

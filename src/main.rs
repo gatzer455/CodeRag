@@ -1,5 +1,3 @@
-// src/main.rs
-
 use clap::{Parser, Subcommand};
 use anyhow::Result;
 use std::fs::File;
@@ -16,6 +14,8 @@ enum Command {
         input_dir: String,
         #[arg(short, long, default_value = "output.json")]
         output_file: String,
+        #[arg(long = "exclude", value_delimiter = ',')]
+        exclude_patterns: Vec<String>,
     },
     // (Más comandos se añadirán luego, como `search` o `preprocess`)
 }
@@ -35,9 +35,10 @@ fn main() -> Result<()> {
         Command::Index {
             input_dir,
             output_file,
+            exclude_patterns,
         } => {
             print!("[+] Indexing codebase in: {}", input_dir);
-            let code_files = processor::find_code_files(&input_dir)?;
+            let code_files = processor::find_code_files(&input_dir, &exclude_patterns)?;
             println!("[+] Found {} code files", code_files.len());
             let chunks = processor::extract_code_chunks(code_files)?; // Se Muestra la barra de progreso aquí en la función misma
 

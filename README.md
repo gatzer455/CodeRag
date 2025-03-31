@@ -61,33 +61,51 @@ cargo build --release
 # cp ./target/release/coderag /usr/local/bin/
 ```
 
-K>Uso
+## ▶️ Uso  #
 
-El comando principal es index. Necesita saber qué directorio escanear y (opcionalmente) dónde guardar el archivo JSON resultante.
-
+El comando principal es `index`. Necesita saber qué directorio escanear y (opcionalmente) dónde guardar el archivo JSON resultante.
 
 ```bash
-coderag index --input-dir <RUTA_AL_PROYECTO> [--output-file <NOMBRE_ARCHIVO_SALIDA.json>]
+coderag index --input-dir <RUTA_AL_PROYECTO> --output-file <NOMBRE_ARCHIVO_SALIDA.json> --exclude <PATRONES_IGNORAR>
+```
+Opciones:
+
+- -i, --input-dir <RUTA>: (Obligatorio) Ruta al directorio del proyecto a indexar.
+- -o, --output-file <ARCHIVO>: (Opcional) Nombre del archivo JSON de salida. Por defecto: output.json.
+- --exclude <PATRONES>: (Opcional) Lista de patrones de archivos/directorios a excluir, separados por comas (ej: "*.log,target/,tmp/"). Estos se añaden a las reglas de .gitignore y .coderagignore. # <-- NUEVA OPCION EXPLICADA
+
 
 Ejemplos:
 
 
-
+```bash
 # Indexar el directorio actual y guardar en output.json (por defecto)
 coderag index -i .
 
-# Indexar un proyecto específico y guardar en un archivo llamado project_data.json
+# Indexar un proyecto específico y guardar en project_data.json
 coderag index --input-dir /ruta/a/mi/proyecto --output-file project_data.json
+
+# Indexar el directorio actual excluyendo archivos .log y el directorio target/
+coderag index -i . --exclude "*.log,target/"
 
 # Usar la ruta completa al ejecutable si no está en el PATH
 /ruta/completa/a/coderag index -i .
+
 ```
+
+Archivo .coderagignore:
+Puedes crear un archivo llamado .coderagignore en la raíz del directorio que estás indexando. Escribe patrones de archivos o directorios que deseas excluir, uno por línea, usando la misma sintaxis que .gitignore. CodeRag lo leerá automáticamente.
+
+# Ejemplo de .coderagignore
+*.tmp
+/vendor/
+build/
 
 📄 Formato de Salida (JSON)
 El archivo de salida (output.json por defecto) contiene un array JSON. Cada elemento del array es un objeto CodeChunk con la siguiente estructura:
 
 
-```json
+```
 [
   {
     "file_path": "src/main.rs",
@@ -106,6 +124,7 @@ Este formato está diseñado para ser fácilmente parseado y utilizado para gene
 
 🗺️ Roadmap (Próximos Pasos)
 - Chunking Inteligente: Usar tree-sitter para dividir archivos de código por funciones, clases o bloques lógicos.
+- Configuración Avanzada de Exclusiones: Permitir más control sobre cómo se combinan .gitignore, .coderagignore y --exclude.
 - Configuración de Exclusiones: Permitir ignorar archivos/directorios específicos mediante un archivo de configuración o flags.
 - Tests: Añadir tests unitarios y de integración.
 - Comando search: Implementar funcionalidad para buscar en el índice generado (potencialmente usando embeddings).
