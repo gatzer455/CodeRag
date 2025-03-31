@@ -72,7 +72,7 @@ coderag index --input-dir <RUTA_AL_PROYECTO> [--output-file <NOMBRE_ARCHIVO_SALI
 Ejemplos:
 
 
-```bash
+
 # Indexar el directorio actual y guardar en output.json (por defecto)
 coderag index -i .
 
