@@ -115,5 +115,7 @@ Este formato está diseñado para ser fácilmente parseado y utilizado para gene
 - Tests: Añadir tests unitarios y de integración.
 - Comando search: Implementar funcionalidad para buscar en el índice generado (potencialmente usando embeddings).
 - Publicación en Crates.io: Hacer que la instalación sea más sencilla con cargo install coderag.
+
+
 🤝 Contribuciones
 ¡Las contribuciones son bienvenidas! Si tienes ideas, encuentras bugs o quieres añadir nuevas funcionalidades, por favor abre un Issue o envía un Pull Request.
